@@ -14,6 +14,9 @@ public class Weapon {
     private int damage;
     private WeaponWeight weaponWeight;
 
+    public Weapon() {
+    }
+
     public Weapon(String name, int damage, WeaponWeight weaponWeight) {
         this.name = name;
         this.damage = damage;

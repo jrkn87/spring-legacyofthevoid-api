@@ -12,18 +12,18 @@ public enum ExperienceToNextLevel {
     LVL_10(10, 12000);
 
     private int level;
-    private long amoundOfExperienceNeeded;
+    private long amountOfExperienceNeeded;
 
     ExperienceToNextLevel(int level, long amoundOfExperienceNeeded) {
         this.level = level;
-        this.amoundOfExperienceNeeded = amoundOfExperienceNeeded;
+        this.amountOfExperienceNeeded = amoundOfExperienceNeeded;
     }
 
     public int getLevel() {
         return level;
     }
 
-    public long getAmoundOfExperienceNeeded() {
-        return amoundOfExperienceNeeded;
+    public long getAmountOfExperienceNeeded() {
+        return amountOfExperienceNeeded;
     }
 }

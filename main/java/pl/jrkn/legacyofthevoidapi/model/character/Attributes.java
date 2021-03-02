@@ -18,6 +18,7 @@ public class Attributes {
     private int luck;
 
     public Attributes() {
+
     }
 
     public Attributes(int strength, int dexterity, int intelligence, int stamina, int luck) {
@@ -74,5 +75,17 @@ public class Attributes {
 
     public void setLuck(int luck) {
         this.luck = luck;
+    }
+
+    @Override
+    public String toString() {
+        return "Attributes{" +
+                "id=" + id +
+                ", strength=" + strength +
+                ", dexterity=" + dexterity +
+                ", intelligence=" + intelligence +
+                ", stamina=" + stamina +
+                ", luck=" + luck +
+                '}';
     }
 }

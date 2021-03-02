@@ -1,16 +1,91 @@
 package pl.jrkn.legacyofthevoidapi.model.character;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
+@Entity
 public class StatPointsOld {
-    private static int minDamage;
-    private static int maxDamage;
-    private static boolean criticalStrikeInfo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private int currentHitPoints;
+    private int maxHitPoints;
+    private int defence;
+    private int resistance;
+    private int damage;
+    private int damageMin;
+    private int damageMax;
+    private int dodgeChance;
+    private int criticalStrikeChance;
+    private boolean dodge;
+    private boolean criticalStrike;
 
-    public static long getAmoundOfExperienceNeeded(int currentLevel) {
+    public StatPointsOld() {
+        this.currentHitPoints = 0;
+        this.maxHitPoints = 0;
+        this.defence = 0;
+        this.resistance = 0;
+        this.damage = 0;
+        this.damageMin = 0;
+        this.damageMax = 0;
+        this.dodgeChance = 0;
+        this.criticalStrikeChance = 0;
+        this.dodge = false;
+        this.criticalStrike = false;
+    }
+
+    public int getCurrentHitPoints() {
+        return currentHitPoints;
+    }
+
+    public int getMaxHitPoints(int stamina, int level) {
+        return maxHitPoints = stamina * 5 + level * 16;
+    }
+
+    public int getDefence(int stamina) {
+        return defence = stamina / 2;
+    }
+
+    public int getResistance(int intelligence) {
+        return resistance = intelligence / 2;
+    }
+
+    public int getDamageFromAttributes(Attributes attributes, CharacterClass characterClass) {
+        damage = (int) ( attributes.getStrength() * characterClass.getStrengthMultiplier() +
+                attributes.getDexterity() * characterClass.getDexterityMultiplier() +
+                attributes.getIntelligence() * characterClass.getIntelligenceMultiplier() +
+                attributes.getLuck() * characterClass.getLuckMultiplier());
+        return damage;
+    }
+
+    public int getDamageMin() {
+        return damageMin;
+    }
+
+    public int getDamageMax() {
+        return damageMax;
+    }
+
+    public int getDodgeChance(int dexterity) {
+        return dodgeChance = PercentageChanceOfSuccess.getChanceOfSuccess(dexterity);
+    }
+
+    public int getCriticalStrikeChance(int luck) {
+        return criticalStrikeChance = PercentageChanceOfSuccess.getChanceOfSuccess(luck);
+    }
+
+    public boolean isDodge(int dexterity) {
+        return dodge = PercentageChanceOfSuccess.chanceOfSuccess(dexterity);
+    }
+
+    public boolean isCriticalStrike(int luck) {
+        return criticalStrike = PercentageChanceOfSuccess.chanceOfSuccess(luck);
+    }
+
+    public static long getAmountOfExperienceNeeded(int currentLevel) {
         int level;
         if (currentLevel == 1)
             level = 0;
@@ -19,67 +94,7 @@ public class StatPointsOld {
         else
             level = currentLevel - 2;
 
-        long[] longs = Arrays.stream(ExperienceToNextLevel.values()).mapToLong(ExperienceToNextLevel::getAmoundOfExperienceNeeded).toArray();
+        long[] longs = Arrays.stream(ExperienceToNextLevel.values()).mapToLong(ExperienceToNextLevel::getAmountOfExperienceNeeded).toArray();
         return longs[level];
-
-    }
-
-    public static int getHitPoints(int stamina) {
-        return stamina * 5;
-    }
-
-    public static int getDefence(int stamina) {
-        return stamina / 2;
-    }
-
-    public static int getResistance(int intelligence) {
-        return intelligence / 2;
-    }
-
-    public static int getDamageMin() {
-        return minDamage;
-    }
-
-    public static int getDamageMax() {
-        return maxDamage;
-    }
-
-    public static int getPower(int strength, int dexterity, int luck, int damageWeapon, int weaponWeightPercentage) {
-        int damage = damageFormula(strength, dexterity, damageWeapon);
-        int x = new Random().nextInt(weaponWeightPercentage);
-        minDamage = damage;
-        maxDamage = damage + weaponWeightPercentage;
-
-        damage += x;
-
-        if (isCriticalStrike(luck)) {
-            System.out.println("Critical strike !!");
-            damage += damage * .75;
-            criticalStrikeInfo = true;
-        } else
-            criticalStrikeInfo = false;
-
-        return damage;
-    }
-
-/*    public static int getDodgeChance(Hero hero) {
-        float dodgeChance = getChance(hero.getAttribute().getDexterity());
-        return (int) (dodgeChance * 100);
-    }*/
-
-    public static boolean criticalStrikeInfo() {
-        return criticalStrikeInfo;
-    }
-
-    private static boolean isDodge(int dexterity) {
-        return PercentageChanceOfSuccess.chanceOfSuccess(dexterity);
-    }
-
-    private static boolean isCriticalStrike(int luck) {
-        return PercentageChanceOfSuccess.chanceOfSuccess(luck);
-    }
-
-    private static int damageFormula(int strength, int dexterity, int demageWeapon) {
-        return (int) (strength * 1.3 + dexterity * .25 + demageWeapon);
     }
 }
